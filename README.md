@@ -107,12 +107,12 @@ Build steps can be broken down into categories like:
 
 ```
 
-PROJECT\_ID=sec-soft-chain
+PROJECT_ID=sec-soft-chain
 REGION=australia-southeast1
 ZONE=australia-southeast1-b
 
 # Create a project and set as default
-gcloud projects create $PROJECT\_ID –set-as-default 
+gcloud projects create $PROJECT_ID –set-as-default 
 
 # Enable the Required API’s
 gcloud services enable container.googleapis.com
@@ -122,19 +122,19 @@ gcloud services enable cloudkms.googleapis.com
 gcloud services enable binaryauthorization.googleapis.com
 
 # Create a cluster for this demo, not production ready settings being used here
-gcloud beta container --project $PROJECT\_ID clusters create "software-secure-supply" --zone $ZONE --no-enable-basic-auth --cluster-version "1.22.8-gke.201" --release-channel "regular" --machine-type "e2-standard-4" --image-type "COS\_CONTAINERD" --disk-type "pd-standard" --disk-size "100" --metadata disable-legacy-endpoints=true --scopes "https://www.googleapis.com/auth/devstorage.read\_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" --max-pods-per-node "110" --num-nodes "2" --logging=SYSTEM,WORKLOAD --monitoring=SYSTEM --enable-ip-alias --network "projects/$PROJECT\_ID/global/networks/default" --subnetwork "projects/$PROJECT\_ID/regions/$REGION/subnetworks/default" --no-enable-intra-node-visibility --default-max-pods-per-node "110" --no-enable-master-authorized-networks --addons HorizontalPodAutoscaling,HttpLoadBalancing,GcePersistentDiskCsiDriver --enable-autoupgrade --enable-autorepair --max-surge-upgrade 1 --max-unavailable-upgrade 1 --enable-shielded-nodes --node-locations $ZONE --enable-binauthz
+gcloud beta container --project $PROJECT_ID clusters create "software-secure-supply" --zone $ZONE --no-enable-basic-auth --cluster-version "1.22.8-gke.201" --release-channel "regular" --machine-type "e2-standard-4" --image-type "COS_CONTAINERD" --disk-type "pd-standard" --disk-size "100" --metadata disable-legacy-endpoints=true --scopes "https://www.googleapis.com/auth/devstorage.read_only","https://www.googleapis.com/auth/logging.write","https://www.googleapis.com/auth/monitoring","https://www.googleapis.com/auth/servicecontrol","https://www.googleapis.com/auth/service.management.readonly","https://www.googleapis.com/auth/trace.append" --max-pods-per-node "110" --num-nodes "2" --logging=SYSTEM,WORKLOAD --monitoring=SYSTEM --enable-ip-alias --network "projects/$PROJECT_ID/global/networks/default" --subnetwork "projects/$PROJECT_ID/regions/$REGION/subnetworks/default" --no-enable-intra-node-visibility --default-max-pods-per-node "110" --no-enable-master-authorized-networks --addons HorizontalPodAutoscaling,HttpLoadBalancing,GcePersistentDiskCsiDriver --enable-autoupgrade --enable-autorepair --max-surge-upgrade 1 --max-unavailable-upgrade 1 --enable-shielded-nodes --node-locations $ZONE --enable-binauthz
 
 # Create an Artifact Repository
-gcloud artifacts repositories create "${PROJECT\_ID}-repo" --location=$REGION  --repository-format=docker
+gcloud artifacts repositories create "${PROJECT_ID}-repo" --location=$REGION  --repository-format=docker
 
 # Allow the Cloud Build Service Account to run scans
-gcloud projects add-iam-policy-binding $PROJECT\_ID  --member=serviceAccount:$(gcloud projects describe $PROJECT\_ID --format="value(projectNumber)")@cloudbuild.gserviceaccount.com --role=roles/ondemandscanning.admin 
+gcloud projects add-iam-policy-binding $PROJECT_ID  --member=serviceAccount:$(gcloud projects describe $PROJECT_ID --format="value(projectNumber)")@cloudbuild.gserviceaccount.com --role=roles/ondemandscanning.admin 
 
 # Allow the Cloud Build Service Account to deploy to GKE
-gcloud projects add-iam-policy-binding $PROJECT\_ID  --member=serviceAccount:$(gcloud projects describe $PROJECT\_ID --format="value(projectNumber)")@cloudbuild.gserviceaccount.com --role=roles/container.developer
+gcloud projects add-iam-policy-binding $PROJECT_ID  --member=serviceAccount:$(gcloud projects describe $PROJECT_ID --format="value(projectNumber)")@cloudbuild.gserviceaccount.com --role=roles/container.developer
 
 # Allow Cloud Build Service Account the permission to attest
-gcloud projects add-iam-policy-binding $PROJECT\_ID  --member=serviceAccount:$(gcloud projects describe $PROJECT\_ID --format="value(projectNumber)")@cloudbuild.gserviceaccount.com --role=roles/containeranalysis.notes.attacher
+gcloud projects add-iam-policy-binding $PROJECT_ID  --member=serviceAccount:$(gcloud projects describe $PROJECT_ID --format="value(projectNumber)")@cloudbuild.gserviceaccount.com --role=roles/containeranalysis.notes.attacher
 ```
 
 ## Setup Cloud Source Repository
@@ -173,16 +173,16 @@ git push --all google
     * For Configuration, select Cloud Build configuration file (yaml or json).
     * In the Location, select Repository enter the default value /cloudbuild.yaml.
 6. Add the following Substitution Variable pairs:
-    * \_IMAGE\_NAME with the image from Cloud Artifact Registry this should be <REGION>-docker.pkg.dev/<PROJECT\_ID>/<PROJECT\_ID>-repo/image
-    * e.g. australia-southeast1-docker.pkg.dev/sec-soft-chain/sec-soft-chain-repo/image \_COMPUTE\_REGION with the value: us-central1 (or the region you chose in the beginning)
-    * \_KMS\_KEYRING with the value: binauthz
-    * \_KMS\_LOCATION with the value: us-central1 (or the region you chose in the beginning)
-    * \_VULNZ\_ATTESTOR with the value: vulnz-attesto
-    * \_VULNZ\_KMS\_KEY with the value: vulnz-signer
-    * \_VULNZ\_KMS\_KEY\_VERSION with the value: 1
-    * \_SONAR\_LOGIN can be blank for now
-    * \_SONAR\_PROJECT can be blank for now
-    * \_SONAR\_ORG can be blank for now
+    * _IMAGE_NAME with the image from Cloud Artifact Registry this should be <REGION>-docker.pkg.dev/<PROJECT_ID>/<PROJECT_ID>-repo/image
+    * e.g. australia-southeast1-docker.pkg.dev/sec-soft-chain/sec-soft-chain-repo/image _COMPUTE_REGION with the value: us-central1 (or the region you chose in the beginning)
+    * _KMS_KEYRING with the value: binauthz
+    * _KMS_LOCATION with the value: us-central1 (or the region you chose in the beginning)
+    * _VULNZ_ATTESTOR with the value: vulnz-attesto
+    * _VULNZ_KMS_KEY with the value: vulnz-signer
+    * _VULNZ_KMS_KEY_VERSION with the value: 1
+    * _SONAR_LOGIN can be blank for now
+    * _SONAR_PROJECT can be blank for now
+    * _SONAR_ORG can be blank for now
 7. Click Create
 
 ![alt_text](images/SubstiutionVars.png "2 highlighted steps")
@@ -207,14 +207,14 @@ The Cloudbuild.yaml file in the repo needs a few changes these can be done manua
 * \<REGION>
 * \<REPO>
 * \<IMAGE>
-* \<PROJECT\_ID>
+* \<PROJECT_ID>
 
 Or the below scripts should set these as per the variables configured previously:giot
 ```
 sed -i "s/<ZONE>/$ZONE/g" cloudbuild.yaml
 sed -i "s/<REGION>/$REGION/g" cloudbuild.yaml
-sed -i "s/<PROJECT\_ID>/$PROJECT\_ID/g" cloudbuild.yaml
-sed -i "s/<REPO>/$PROJECT\_ID-repo/g" cloudbuild.yaml
+sed -i "s/<PROJECT_ID>/$PROJECT_ID/g" cloudbuild.yaml
+sed -i "s/<REPO>/$PROJECT_ID-repo/g" cloudbuild.yaml
 sed -i "s/<IMAGE>/image/g" cloudbuild.yaml
 ```
 
@@ -259,7 +259,7 @@ Note: Given below is the list of stripped down actions borrowed from following l
 2. Configure the Binary Authorization signer for Cloud Build: \
 Before use, the code for the custom build step must be built into a container and pushed to Cloud Build. To do this, run the following commands:
 ```
-    gcloud builds submit --project $PROJECT\_ID --tag "gcr.io/$PROJECT\_ID/cloudbuild-attestor" ~/binauthz-tools
+    gcloud builds submit --project $PROJECT_ID --tag "gcr.io/$PROJECT_ID/cloudbuild-attestor" ~/binauthz-tools
 ```
 3. The custom build step was pushed to your current project's Google Container Registry and is now ready for use
 
@@ -268,7 +268,7 @@ Before use, the code for the custom build step must be built into a container an
 1. In Cloud Shell, create a Cloud KMS key ring named binauthz:
 ```
     gcloud kms keyrings create "binauthz" \
-    --project "${PROJECT\_ID}" \
+    --project "${PROJECT_ID}" \
     --location "${REGION}"
 ```
 2. Create an asymmetric Cloud KMS key named vulnz-signer which will be used to sign and verify vulnerability scan attestations:
@@ -334,37 +334,37 @@ Before use, the code for the custom build step must be built into a container an
 
 ### Create the vulnerability scan attestor
 ```
-    gcloud container binauthz attestors create "vulnz-attestor" \_
-        --project "${PROJECT\_ID}" \
-        --attestation-authority-note-project "${PROJECT\_ID}" \
+    gcloud container binauthz attestors create "vulnz-attestor" _
+        --project "${PROJECT_ID}" \
+        --attestation-authority-note-project "${PROJECT_ID}" \
         --attestation-authority-note "vulnz-note" \
         --description "Vulnerability scan attestor"
 ```
 ### Add the public key for the attestor's signing key
 ```
     gcloud beta container binauthz attestors public-keys add \
-    --project "${PROJECT\_ID}" \
+    --project "${PROJECT_ID}" \
     --attestor "vulnz-attestor" \ 
     --keyversion "1" \ 
     --keyversion-key "vulnz-signer" \ 
     --keyversion-keyring "binauthz" \ 
     --keyversion-location "${REGION}" \ 
-    --keyversion-project "${PROJECT\_ID}"
+    --keyversion-project "${PROJECT_ID}"
 ```
 ### Grant the Cloud Build service account permission to verify attestations made by vulnz-attestor
 ```
       gcloud container binauthz attestors add-iam-policy-binding "vulnz-attestor" \
-      --project "${PROJECT\_ID}" \
-      --member=serviceAccount:$(gcloud projects describe $PROJECT\_ID --format="value(projectNumber)")@cloudbuild.gserviceaccount.com \
+      --project "${PROJECT_ID}" \
+      --member=serviceAccount:$(gcloud projects describe $PROJECT_ID --format="value(projectNumber)")@cloudbuild.gserviceaccount.com \
       --role "roles/binaryauthorization.attestorsViewer"
 ```
 ### Grant the Cloud Build service account permission to sign objects using the vulnz-signer key
 ```
     gcloud kms keys add-iam-policy-binding "vulnz-signer" \
-    --project "${PROJECT\_ID}" \
+    --project "${PROJECT_ID}" \
     --location "${REGION}" \ 
     --keyring "binauthz" \ 
-    --member serviceAccount:$(gcloud projects describe $PROJECT\_ID --format="value(projectNumber)")@cloudbuild.gserviceaccount.com \
+    --member serviceAccount:$(gcloud projects describe $PROJECT_ID --format="value(projectNumber)")@cloudbuild.gserviceaccount.com \
     --role 'roles/cloudkms.signerVerifier'
 ```
 ### Configure Binary Authorization default policy like below
