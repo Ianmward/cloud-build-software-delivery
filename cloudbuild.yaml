@@ -108,7 +108,7 @@ steps:
     id: '10 Deploy Kubernetes Manifest to GKE'
     args: [ 'apply', '-f', 'manifests/gradle-app.yaml' ]
     env:
-      - 'CLOUDSDK_COMPUTE_REGION=australia-southeast1-b'
+      - 'CLOUDSDK_COMPUTE_REGION=australia-southeast1'
       - 'CLOUDSDK_CONTAINER_CLUSTER=software-secure-supply'
       
       
